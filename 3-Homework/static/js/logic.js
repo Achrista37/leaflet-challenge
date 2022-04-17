@@ -1,6 +1,6 @@
 var myMap = L.map("map", {
-    center: [40.7, -73.95],
-    zoom: 11
+    center: [4.695135, 96.749397],
+    zoom: 3
   });
   
   // Adding tile layer to the map
@@ -11,7 +11,7 @@ var myMap = L.map("map", {
     zoomOffset: -1,
     id: "mapbox/streets-v11",
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    accessToken: "pk.eyJ1IjoiYWNocmlzdGEiLCJhIjoiY2wxdzBkdHY4MDBiYTNjcGxtM2JwbWFiZiJ9.4Wk3PztU_yvNvrplSJIwug"
+    accessToken: API_KEY
   }).addTo(myMap);
   
 
@@ -35,7 +35,7 @@ var myMap = L.map("map", {
       if (response) {
   
         // Add a new marker to the cluster group and bind a pop-up
-        L.marker([coordinates_of])
+        L.marker(coordinates_of[1],coordinates_of[0])
           .bindPopup(coordinates_of[i]).addTo(myMap);
       }
   
