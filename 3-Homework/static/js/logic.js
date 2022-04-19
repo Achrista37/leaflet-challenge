@@ -1,7 +1,7 @@
 //Get leaflet to generate a base map, with a center in Aceh, Indonesia
 var myMap = L.map("map", {
   center: [4.695135, 96.749397],
-  zoom: 3
+  zoom: 4
 });
 
 // Adding tile layer to the map
@@ -14,6 +14,12 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   accessToken: API_KEY
 }).addTo(myMap);
 
+var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+	maxZoom: 17,
+	attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+});
+
+OpenTopoMap.addTo(myMap);
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////// 
@@ -83,6 +89,7 @@ d3.json(url).then(function (response) {
     var div = L.DomUtil.create("div", "info legend");
 
 var grades = [0, 1, 2, 3, 4, 5];
+
     var colors = [
       "#B7F34D",
       "#E0F34D",
@@ -104,7 +111,7 @@ var grades = [0, 1, 2, 3, 4, 5];
   };
 
   // We add our legend to the map.
-  legend.addTo(map);
+  legend.addTo(myMap);
 
 
 
