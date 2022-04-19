@@ -70,7 +70,7 @@ d3.json(url).then(function (response) {
       }
     },
     pointToLayer: function (feature, latlng) {
-      //console.log(geojson)
+      
       return new L.CircleMarker(latlng);
     },
     onEachFeature: function (feature, layer) {
@@ -78,5 +78,29 @@ d3.json(url).then(function (response) {
     }
   }).addTo(myMap);
 
+  var legend = L.control({position: 'bottomleft'});
+  legend.onAdd = function (map) {
+  
+  var div = L.DomUtil.create('div', 'info legend');
+  labels = ['<strong>Magnitude Categories</strong>'],
+  categories = ['>5','4-5','3-4','2-3','1-2', '0-1'];
+  
+  for (var i = 0; i < response.length; i++) {
+  
+          div.innerHTML += 
+          labels.push(
+              '<i class="circle" style="background:' + colorSelector(response.features[i].properties.mag) + '"></i> ' +
+          (response.features[i].properties.mag ? response.features[i].properties.mag : '+'));
+  
+      }
+      div.innerHTML = labels.join('<br>');
+  return div;
+  };
+  legend.addTo(myMap);
 
+
+
+
+
+///////////////////////////////  
 })
