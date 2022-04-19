@@ -1,171 +1,169 @@
-var myMap = L.map("map", {
-    center: [4.695135, 96.749397],
-    zoom: 3
-  });
+var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+  attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+  maxZoom: 18,
+  id: "light-v10",
+  accessToken: API_KEY
+});
+
+// Initialize all of the LayerGroups we'll be using
+var layers = {
+  mag_01: new L.LayerGroup(),
+  mag_12: new L.LayerGroup(),
+  mag_23: new L.LayerGroup(),
+  mag_34: new L.LayerGroup(),
+  mag_45: new L.LayerGroup(),
+  mag_5up: new.L.LayerGroup
+};
+
+// Create the map with our layers
+var map = L.map("map", {
+  center: [40.73, -74.0059],
+  zoom: 12,
+  layers: [
+    layers.mag_01,
+    layers.mag_12,
+    layers.mag_23,
+    layers.mag_34,
+    layers.mag_45,
+    layers.mag_5up
+  ]
+});
+
+// Add our 'lightmap' tile layer to the map
+lightmap.addTo(map);
+
+var overlays = {
+  "Magnitude 0-1": layers.mag_01,
+  "Magnitude 1-2": layers.mag_12,
+  "Magnitude 2-3": layers.mag_23,
+  "Magnitude 3-4": layers.mag_34,
+  "Magnitude 4-5": layers.mag_45,
+  "Manitude 5++": layers.mag_5up
+};
+
+// Create a control for our layers, add our overlay layers to it
+L.control.layers(null, overlays).addTo(map);
+
+
+// Create a legend to display information about our map
+var info = L.control({
+  position: "bottomright"
+});
+
+// When the layer control is added, insert a div with the class of "legend"
+info.onAdd = function() {
+  var div = L.DomUtil.create("div", "legend");
+  return div;
+};
+
+// Add the info legend to the map
+info.addTo(map);
+
+// Initialize an object containing icons for each layer group
+var icons = {
+  mag_01: L.ExtraMarkers.icon({
+    icon: "ion-settings",
+    iconColor: "white",
+    markerColor: "yellow",
+    shape: "star"
+  }),
+  mag_12: L.ExtraMarkers.icon({
+    icon: "ion-android-bicycle",
+    iconColor: "white",
+    markerColor: "red",
+    shape: "circle"
+  }),
+  mag_23: L.ExtraMarkers.icon({
+    icon: "ion-minus-circled",
+    iconColor: "white",
+    markerColor: "blue-dark",
+    shape: "penta"
+  }),
+  mag_34: L.ExtraMarkers.icon({
+    icon: "ion-android-bicycle",
+    iconColor: "white",
+    markerColor: "orange",
+    shape: "circle"
+  }),
+  mag_45: L.ExtraMarkers.icon({
+    icon: "ion-android-bicycle",
+    iconColor: "white",
+    markerColor: "green",
+    shape: "circle"
+  }),
+  mag_5up: L.ExtraMarkers.icon({
+    icon: "ion-android-bicycle",
+    iconColor: "white",
+    markerColor: "green",
+    shape: "circle"
+  })
+};
+
+var url = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2004-12-26&endtime=2004-12-27&minmagnitude=1";
+
+
+d3.json(url).then(function(earthquake_data) {
   
-  // Adding tile layer to the map
-  L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-    tileSize: 512,
-    maxZoom: 18,
-    zoomOffset: -1,
-    id: "mapbox/streets-v11",
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    accessToken: API_KEY
-  }).addTo(myMap);
-  
-
-
- ///////////////////////////////////////////////////////////////////////////////////////////// 
-  // Store API query variables
-  var url = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2004-12-26&endtime=2004-12-27&minmagnitude=1";
-  
-  // Grab the data with d3
-  d3.json(url).then(function(response) {
-  console.log(response.features[1].geometry.coordinates)
-  var geoJson = L.geoJson(response).addTo(myMap)
-    // Create a new marker cluster group
- //  var markers = L.markerClusterGroup();
-  
- /*
-    // Loop through data
-    for (var i = 0; i < response.length; i++) {
-      coordinates_of = response.features[i].geometry.coordinates  
-      // Set the data location property to a variable
-//      
-      // Check for location property
-      if (response) {
-  
-        // Add a new marker to the cluster group and bind a pop-up
-        L.marker(coordinates_of[1],coordinates_of[0])
-          .bindPopup(coordinates_of[i]).addTo(myMap);
-      }
-  
-   // }
-    }
-    */
-    // Add our marker cluster layer to the map
- //   myMap.addLayer(markers);
-  
-  });
-  
-  var circle = L.circle(geoJson, {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: 500
-}).addTo(map);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-function createMap(usgsData) {
-
-    // Create the tile layer that will be the background of our map
-    var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-      attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-      maxZoom: 18,
-      id: "light-v10",
-      accessToken: API_KEY
-    });
-  
-    // Create a baseMaps object to hold the lightmap layer
-    var baseMaps = {
-      "Light Map": lightmap
-    };
-  
-    // Create an overlayMaps object to hold the bikeStations layer
-    var overlayMaps = {
-      "Bike Stations": usgsData
-    };
-  
-    // Create the map object with options
-    var map = L.map("map-id", {
-      center: [47.6098, -122.3390],
-      zoom: 12,
-      layers: [lightmap, usgsData]
-    });
-  
-    // Create a layer control, pass in the baseMaps and overlayMaps. Add the layer control to the map
-    L.control.layers(baseMaps, overlayMaps, {
-      collapsed: false
-    }).addTo(map);
-  }
-  
-// Grab the data with d3
-d3.json("https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2004-12-26&endtime=2004-12-27&minmagnitude=1").then(function(response) {
-
-    // Create a new marker cluster group
-    var markers = L.markerClusterGroup();
-  
-    // Loop through data
-    for (var i = 0; i < response.length; i++) {
-  
-      // Set the data location property to a variable
-      var location = response[i].location;
-  
-      // Check for location property
-      if (location) {
-  
-        // Add a new marker to the cluster group and bind a pop-up
-        markers.addLayer(L.marker([location.coordinates[1], location.coordinates[0]])
-          .bindPopup(response[i].descriptor));
-      }
-  
-    }
-  
-    // Add our marker cluster layer to the map
-    myMap.addLayer(markers);
-  
-  });
-  
-/*
-
-  function createMarkers(quake) {
-  
-    // Pull the "stations" property off of response.data
-    
-  
-    // Loop through data
-    for (var i = 0; i < coordinates.length; i++) {
-  
-        // Set the data location property to a variable
-        var coordinates = quake.metadata.features[i].geometry.coordinates;
-    
-        // Check for location property
-        if (coordinates) {
-    
-          // Add a new marker to the cluster group and bind a pop-up
-          markers.addLayer(L.marker(coordinates[1], coordinates.coordinates[0])
-            .bindPopup(quake[i]));
-        }
-    
-      }
-  
-    
-    // Create a layer group made from the bike markers array, pass it into the createMap function
- //   createMap(L.layerGroup(coordinates));
-  }
- */ 
   /*
-  // Perform an API call to the Citi Bike API to get station information. Call createMarkers when complete
-  d3.json("https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2004-12-26&endtime=2004-12-27&minmagnitude=1").then(createMarkers);
-  */
+  var updatedAt = infoRes.last_updated;
+    var stationStatus = statusRes.data.stations;
+    var stationInfo = infoRes.data.stations;
+*/
+
+
+    // Create an object to keep of the number of markers in each layer
+    var stationCount = {
+      mag_01: 0,
+      mag_12: 0,
+      mag_23: 0,
+      mag_34: 0,
+      mag_45: 0,
+      mag_5up: 0
+    };
+
+    // Initialize a stationStatusCode, which will be used as a key to access the appropriate layers, icons, and station count for layer group
+    var magnitudeCode;
+
+    // Loop through the stations (they're the same size and have partially matching data)
+    for (var i = 0; i < earthquake_data.length; i++) {
+      var magnitude = response.features[0].properties.mag;
+      // Create a new station object with properties of both station objects
+      var station = Object.assign({}, stationInfo[i], stationStatus[i]);
+      // If a station is listed but not installed, it's coming soon
+      if (!station.is_installed) {
+        magnitudeCode = "COMING_SOON";
+      }
+      // If a station has no bikes available, it's empty
+      else if (!station.num_bikes_available) {
+        magnitudeCode = "EMPTY";
+      }
+      // If a station is installed but isn't renting, it's out of order
+      else if (station.is_installed && !station.is_renting) {
+        magnitudeCode = "OUT_OF_ORDER";
+      }
+      // If a station has less than 5 bikes, it's status is low
+      else if (station.num_bikes_available < 5) {
+        magnitudeCode = "LOW";
+      }
+      // Otherwise the station is normal
+      else {
+        magnitudeCode = "NORMAL";
+      }
+
+      // Update the station count
+      stationCount[magnitudeCode]++;
+      // Create a new marker with the appropriate icon and coordinates
+      var newMarker = L.marker([station.lat, station.lon], {
+        icon: icons[magnitudeCode]
+      });
+
+      // Add the new marker to the appropriate layer
+      newMarker.addTo(layers[magnitudeCode]);
+
+      // Bind a popup to the marker that will  display on click. This will be rendered as HTML
+      newMarker.bindPopup(station.name + "<br> Capacity: " + station.capacity + "<br>" + station.num_bikes_available + " Bikes Available");
+    }
+
+    // Call the updateLegend function, which will... update the legend!
+    updateLegend(updatedAt, stationCount);
+  });
