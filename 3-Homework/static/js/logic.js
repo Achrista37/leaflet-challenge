@@ -23,9 +23,11 @@ var myMap = L.map("map", {
   // Grab the data with d3
   d3.json(url).then(function(response) {
   console.log(response.features[1].geometry.coordinates)
+  var geoJson = L.geoJson(response).addTo(myMap)
     // Create a new marker cluster group
  //  var markers = L.markerClusterGroup();
   
+ /*
     // Loop through data
     for (var i = 0; i < response.length; i++) {
       coordinates_of = response.features[i].geometry.coordinates  
@@ -41,12 +43,18 @@ var myMap = L.map("map", {
   
    // }
     }
+    */
     // Add our marker cluster layer to the map
  //   myMap.addLayer(markers);
   
   });
   
-
+  var circle = L.circle(geoJson, {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 500
+}).addTo(map);
 
 
 
