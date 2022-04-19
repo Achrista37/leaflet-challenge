@@ -78,7 +78,7 @@ d3.json(url).then(function (response) {
     }
   }).addTo(myMap);
 
-  var legend = L.control({position: 'topleft'});
+  var legend = L.control({position: "bottomright"});
   legend.onAdd = function() {
     var div = L.DomUtil.create("div", "info legend");
 
