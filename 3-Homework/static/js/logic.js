@@ -78,23 +78,33 @@ d3.json(url).then(function (response) {
     }
   }).addTo(myMap);
 
-  var legend = L.control({position: 'bottomleft'});
-  legend.onAdd = function (map) {
-  
-  var div = L.DomUtil.create('div', 'info-legend');
-  labels = ['<strong>Magnitude Categories</strong>'],
-  categories = ['>5','4-5','3-4','2-3','1-2', '0-1'];
-  
-  for (var i = 0; i < response.length; i++) {
-  
-    div.innerHTML +=  '<i class="circle" style="background:' + colorSelector(response.features[i].properties.mag) + '"></i> ' +
-    (response.features[i].properties.mag ? response.features[i].properties.mag : '+')
-  
-      }
-//      div.innerHTML = labels.join('<br>');
-  return div;
+  var legend = L.control({position: 'topleft'});
+  legend.onAdd = function() {
+    var div = L.DomUtil.create("div", "info legend");
+
+var grades = [0, 1, 2, 3, 4, 5];
+    var colors = [
+      "#B7F34D",
+      "#E0F34D",
+      "#F3DA4D",
+      "#F3B94D",
+      "#F0A76B",
+      "#F06B6B"];
+
+    // Loop through our intervals and generate a label with a colored square for each interval.
+    for (var i = 0; i < grades.length; i++) {
+      div.innerHTML += "<i style='background: "
+        + colors[i]
+        + "'></i> "
+        + grades[i]
+        + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+    }
+
+    return div;
   };
-  legend.addTo(myMap);
+
+  // We add our legend to the map.
+  legend.addTo(map);
 
 
 
