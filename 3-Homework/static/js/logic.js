@@ -98,6 +98,7 @@ var grades = [0, 1, 2, 3, 4, 5];
       "#F0A76B",
       "#F06B6B"];
 
+      div.innerHTML += '<b>Magnitude Categories</b><br>'
     // Loop through our intervals and generate a label with a colored square for each interval.
     for (var i = 0; i < grades.length; i++) {
       div.innerHTML += "<i style='background: "
@@ -110,7 +111,7 @@ var grades = [0, 1, 2, 3, 4, 5];
     return div;
   };
 
-  // We add our legend to the map.
+  // add legend onto the map.
   legend.addTo(myMap);
 
 
